@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "E-Commerce API",
+    "description": "API Spec for E-Commerce API",
+    "version": "1.0"
+  },
+  "servers": [{ "url": "https://localhost:8080/v1/api" }],
+  "paths": {
+    "/merch": {
+      "get": {
+        "description": "List all merch",
+        "summary": "List all merch",
+        "responses": {
+          "200": {
+            "description": "Success get all merch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Merch"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create a new merch",
+        "summary": "Create a new merch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateMerch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success Create merch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Merch"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merch/{merchId}": {
+      "put": {
+        "description": "Update a merch",
+        "summary": "Update a merch",
+        "parameters": [
+          {
+            "name": "merchId",
+            "in": "path",
+            "description": "Merch Id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateMerch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success Update merch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Merch"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete a merch",
+        "summary": "Delete a merch",
+        "parameters": [
+          {
+            "name": "merchId",
+            "in": "path",
+            "description": "Merch Id"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success Delete merch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateOrUpdateMerch": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Merch": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
