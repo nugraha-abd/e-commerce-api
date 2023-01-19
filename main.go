@@ -3,6 +3,7 @@ package main
 import (
 	"e-commerce-api/config"
 	"e-commerce-api/controller"
+	"e-commerce-api/exception"
 	"e-commerce-api/repository"
 	"e-commerce-api/service"
 	"e-commerce-api/utils"
@@ -23,6 +24,8 @@ func main() {
 	router.HandleFunc("/api/v1/merch/:merchId", merchController.Update)
 	router.HandleFunc("/api/v1/merch/:merchId", merchController.Delete)
 	//r.HandleFunc("/api/v1/merch/:merchId", merchController.Order)
+
+	router.PanicHandler = exception.ErrorHandler // Need httprouter library
 
 	err := http.ListenAndServe(":8080", router)
 	utils.PanicIfError(err)

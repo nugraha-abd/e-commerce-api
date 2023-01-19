@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"e-commerce-api/exception"
 	"e-commerce-api/model/domain"
 	"e-commerce-api/model/web"
 	"e-commerce-api/repository"
@@ -37,8 +38,10 @@ func (service *MerchServiceImpl) 	FindById(ctx context.Context, merchId int) web
 	defer utils.CommitOrRollback(tx)
 
 	merch, err := service.MerchRepository.FindById(ctx, tx, merchId)
-	utils.PanicIfError(err)
-
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+	
 	return utils.ToMerchResponse(merch)
 }
 
@@ -66,7 +69,9 @@ func (service *MerchServiceImpl) 	Update(ctx context.Context, req web.MerchUpdat
 	defer utils.CommitOrRollback(tx)
 
 	merch, err := service.MerchRepository.FindById(ctx, tx, req.Id)
-	utils.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	merch = domain.Merch{
 		Name: req.Name,
@@ -87,7 +92,9 @@ func (service *MerchServiceImpl) 	Delete(ctx context.Context, merchId int) {
 	defer utils.CommitOrRollback(tx)
 
 	merch, err := service.MerchRepository.FindById(ctx, tx, merchId)
-	utils.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.MerchRepository.Delete(ctx, tx, merch)
 }
