@@ -9,6 +9,8 @@ import (
 	"e-commerce-api/utils"
 	"log"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -17,15 +19,16 @@ func main() {
 	merchService := service.NewMerchService(merchRespository, db)
 	merchController := controller.NewMerchController(merchService)
 
-	router := http.NewServeMux()
-	router.HandleFunc("/api/v1/merch", merchController.FindAll)
-	router.HandleFunc("/api/v1/merch/:merchId", merchController.FindById)
-	router.HandleFunc("/api/v1/merch", merchController.Create)
-	router.HandleFunc("/api/v1/merch/:merchId", merchController.Update)
-	router.HandleFunc("/api/v1/merch/:merchId", merchController.Delete)
-	//r.HandleFunc("/api/v1/merch/:merchId", merchController.Order)
+	router := httprouter.New()
 
-	router.PanicHandler = exception.ErrorHandler // Need httprouter library
+	router.GET("/api/v1/merch", merchController.FindAll)
+	router.GET("/api/v1/merch/:merchId", merchController.FindById)
+	router.POST("/api/v1/merch", merchController.Create)
+	router.PUT("/api/v1/merch/:merchId", merchController.Update)
+	router.DELETE("/api/v1/merch/:merchId", merchController.Delete)
+	//router.POST("/api/v1/merch/:merchId", merchController.Order)
+
+	router.PanicHandler = exception.ErrorHandler
 
 	err := http.ListenAndServe(":8080", router)
 	utils.PanicIfError(err)
