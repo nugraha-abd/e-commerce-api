@@ -5,6 +5,9 @@ import (
 	"e-commerce-api/service"
 	"e-commerce-api/utils"
 	"net/http"
+	"strconv"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 type MerchControllerImpl struct {
@@ -17,7 +20,7 @@ func NewMerchController(merchService service.MerchService) MerchController {
 	}
 }
 
-func (controller *MerchControllerImpl) FindAll(w http.ResponseWriter, r *http.Request) {
+func (controller *MerchControllerImpl) FindAll(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	merchResponses := controller.MerchService.FindAll(r.Context())
 	webResponse := web.WebResponse{
 		Code: 204,
@@ -28,12 +31,11 @@ func (controller *MerchControllerImpl) FindAll(w http.ResponseWriter, r *http.Re
 	utils.WriteToResponseBody(w, webResponse)
 }
 
-func (controller *MerchControllerImpl) FindById(w http.ResponseWriter, r *http.Request) {
-	//merchUpdateRequest.Id = params.ByName("merchId")
-	//id, err := strconv.Atoi(merchId)
-	//utils.PanicIfError(err)
+func (controller *MerchControllerImpl) FindById(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	merchId := params.ByName("merchId")
+	id, err := strconv.Atoi(merchId)
+	utils.PanicIfError(err)
 
-	id := 1 // placeholder
 	merchResponse := controller.MerchService.FindById(r.Context(), id)
 	webResponse := web.WebResponse{
 		Code: 204,
@@ -44,7 +46,7 @@ func (controller *MerchControllerImpl) FindById(w http.ResponseWriter, r *http.R
 	utils.WriteToResponseBody(w, webResponse)
 }
 
-func (controller *MerchControllerImpl) Create(w http.ResponseWriter, r *http.Request) {
+func (controller *MerchControllerImpl) Create(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	merchCreateRequest := web.MerchCreateRequest{}
 	utils.ReadFromRequestBody(r, &merchCreateRequest)
 
@@ -58,14 +60,16 @@ func (controller *MerchControllerImpl) Create(w http.ResponseWriter, r *http.Req
 	utils.WriteToResponseBody(w, webResponse)
 }
 
-func (controller *MerchControllerImpl) Update(w http.ResponseWriter, r *http.Request) {
+func (controller *MerchControllerImpl) Update(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 	merchUpdateRequest := web.MerchUpdateRequest{}
 	utils.ReadFromRequestBody(r, &merchUpdateRequest)
 
-	//merchUpdateRequest.Id = params.ByName("merchId")
-	//id, err := strconv.Atoi(merchId)
-	//utils.PanicIfError(err)
+	merchId := params.ByName("merchId")
+	id, err := strconv.Atoi(merchId)
+	utils.PanicIfError(err)
 
+	merchUpdateRequest.Id = id
+	
 	merchResponse := controller.MerchService.Update(r.Context(), merchUpdateRequest)
 	webResponse := web.WebResponse{
 		Code: 201,
@@ -76,12 +80,10 @@ func (controller *MerchControllerImpl) Update(w http.ResponseWriter, r *http.Req
 	utils.WriteToResponseBody(w, webResponse)
 }
 
-func (controller *MerchControllerImpl) Delete(w http.ResponseWriter, r *http.Request) {
-	//merchUpdateRequest.Id = params.ByName("merchId")
-	//id, err := strconv.Atoi(merchId)
-	//utils.PanicIfError(err)
-
-	id := 1 // placeholder
+func (controller *MerchControllerImpl) Delete(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	merchId := params.ByName("merchId")
+	id, err := strconv.Atoi(merchId)
+	utils.PanicIfError(err)
 
 	controller.MerchService.Delete(r.Context(), id)
 	webResponse := web.WebResponse{
